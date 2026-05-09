@@ -88,13 +88,50 @@ function analyzeText() {
   // フレーズ辞書リスト
   // =========================
   const phraseRules = [
-    { pattern: ["の", "よう", "な"], label: "のような", group: "比喩" },
-    { pattern: ["の", "よう", "だ"], label: "のようだ", group: "比喩" },
-    { pattern: ["の", "よう", "に"], label: "のように", group: "比喩" },
-    { pattern: ["間違い", "ない"], label: "間違いない", group: "断定・強調" },
-　　{ pattern: ["間違い", "なく"], label: "間違いなく", group: "断定・強調" },
-　　{ pattern: ["絶対"], label: "絶対", group: "断定・強調" },
-　　{ pattern: ["絶対", "に"], label: "絶対に", group: "断定・強調" }
+
+  // =========================
+  // 比喩表現
+  // =========================  
+{ pattern: ["かの", "よう", "に"], label: "かのように", group: "比喩" },
+{ pattern: ["かの", "よう", "な"], label: "かのような", group: "比喩" },
+{ pattern: ["まるで"], label: "まるで", group: "比喩" },
+{ pattern: ["さながら"], label: "さながら", group: "比喩" },
+{ pattern: ["っぽい"], label: "っぽい", group: "比喩" },
+{ pattern: ["風", "に"], label: "風に", group: "比喩" },
+{ pattern: ["風", "な"], label: "風な", group: "比喩" },
+{ pattern: ["を", "思わせる"], label: "を思わせる", group: "比喩" },
+{ pattern: ["を", "彷彿", "と", "させる"], label: "を彷彿とさせる", group: "比喩" },
+
+  // =========================
+  // 断定
+  // =========================
+{ pattern: ["間違い", "ない"], label: "間違いない", group: "断定" },
+{ pattern: ["間違い", "なく"], label: "間違いなく", group: "断定" },
+{ pattern: ["絶対"], label: "絶対", group: "断定" },
+{ pattern: ["絶対", "に"], label: "絶対に", group: "断定" },
+{ pattern: ["確実"], label: "確実", group: "断定" },
+{ pattern: ["確実", "に"], label: "確実に", group: "断定" },
+{ pattern: ["必ず"], label: "必ず", group: "断定" },
+{ pattern: ["必ず", "や"], label: "必ずや", group: "断定" },
+
+  // =========================
+  // 程度強調
+  // =========================
+{ pattern: ["非常", "に"], label: "非常に", group: "強調（程度）" },
+{ pattern: ["とても"], label: "とても", group: "強調（程度）" },
+{ pattern: ["かなり"], label: "かなり", group: "強調（程度）" },
+{ pattern: ["ものすごく"], label: "ものすごく", group: "強調（程度）" },
+{ pattern: ["実に"], label: "実に", group: "強調（程度）" },
+{ pattern: ["まったく"], label: "まったく", group: "強調（程度）" },
+
+  // =========================
+  // 感情強調
+  // =========================
+{ pattern: ["まさに"], label: "まさに", group: "強調（感情・評価）" },
+{ pattern: ["いかにも"], label: "いかにも", group: "強調（感情・評価）" },
+{ pattern: ["確か", "に"], label: "確かに", group: "強調（感情・評価）" } 
+
+
   ];
 
   // =========================
