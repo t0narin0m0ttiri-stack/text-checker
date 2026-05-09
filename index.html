@@ -85,7 +85,7 @@ function analyzeText() {
   const tokens = window.tokenizer.tokenize(text);
 
   // =========================
-  // フレーズ辞書
+  // フレーズ辞書リスト
   // =========================
   const phraseRules = [
     { pattern: ["の", "よう", "な"], label: "のような", group: "比喩" },
@@ -96,6 +96,16 @@ function analyzeText() {
 　　{ pattern: ["絶対"], label: "絶対", group: "断定・強調" },
 　　{ pattern: ["絶対", "に"], label: "絶対に", group: "断定・強調" }
   ];
+
+  // =========================
+  // ユーザー辞書リスト
+  // =========================
+const userDictionary = [
+  "カラスバ",
+  "ヒトデマン"
+];
+
+
 
   const labelToGroup = {};
 for (const rule of phraseRules) {
@@ -143,19 +153,27 @@ for (const rule of phraseRules) {
   // =========================
   // 単語カウント
   // =========================
-  for (const token of tokens) {
+for (const token of tokens) {
 
-const word = token.surface_form;
+  const word = token.surface_form;
 
-if (!word) continue;
-if (word.trim() === "") continue; // 空白削除
-if (/\s/.test(word)) continue;    // スペース除外
-if (word.length <= 1) continue;
-if (stopWords.includes(word)) continue;
+  if (!word) continue;
+  if (word.trim() === "") continue;
+  if (/\s/.test(word)) continue;
+  if (word.length <= 1) continue;
+  if (stopWords.includes(word)) continue;
 
+  // ★ユーザー辞書チェック
+  if (userDictionary.includes(word)) {
     wordCounts[word] =
       (wordCounts[word] || 0) + 1;
+    continue;
   }
+
+  // 通常カウント
+  wordCounts[word] =
+    (wordCounts[word] || 0) + 1;
+}
 
   // =========================
   // 表示
