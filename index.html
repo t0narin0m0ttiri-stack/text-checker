@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>文章チェッカー</title>
+
+  <script src="https://unpkg.com/kuromoji@0.1.2/build/kuromoji.js"></script>
+
+  <style>
+body {
+  background: #f4f4f4;
+  margin: 0;
+  padding: 16px;
+}
+
+h1 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+textarea {
+  width: 100%;
+  height: 180px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  padding: 12px;
+  font-size: 16px;
+  box-sizing: border-box;
+  background: white;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 12px;
+  background: #333;
+  color: white;
+  font-size: 16px;
+}
+
+button:disabled {
+  background: #aaa;
+}
+
+#result {
+  margin-top: 16px;
+  padding: 12px;
+  background: white;
+  border-radius: 12px;
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.6;
+}
+  </style>
+</head>
+
+<body>
+
+  <h1>文章表現チェッカー</h1>
+
+  <textarea id="text" placeholder="ここに文章を入力"></textarea>
+
+  <br>
+
+  <button id="btn" onclick="analyzeText()" disabled>
+    読み込み中...
+  </button>
+
+  <div id="result"></div>
+
+<script>
+
+function analyzeText() {
+
+  const text = document.getElementById("text").value;
+
+  if (!window.tokenizer) {
+    document.getElementById("result").innerText =
+      "形態素解析エンジンがまだ準備できていません";
+    return;
+  }
+
+  const tokens = window.tokenizer.tokenize(text);
+
+  // =========================
+  // フレーズ辞書
+  // =========================
+  const phraseRules = [
+    { pattern: ["の", "よう", "な"], label: "のような", group: "比喩" },
+    { pattern: ["の", "よう", "だ"], label: "のようだ", group: "比喩" },
+    { pattern: ["の", "よう", "に"], label: "のように", group: "比喩" }
+  ];
+
+  const labelToGroup = {};
+for (const rule of phraseRules) {
+  labelToGroup[rule.label] = rule.group;
+}
+
+  // =========================
+  // カウント用
+  // =========================
+  const wordCounts = {};
+  const phraseCounts = {};
+  const groupCounts = {};
+
+  const stopWords = [
+    "の","に","は","を","た","が","で","て","と","し","れ","さ"
+  ];
+
+  // =========================
+  // フレーズ検出
+  // =========================
+  for (let i = 0; i < tokens.length; i++) {
+
+    for (const rule of phraseRules) {
+
+      let match = true;
+
+      for (let j = 0; j < rule.pattern.length; j++) {
+        if (tokens[i + j]?.surface_form !== rule.pattern[j]) {
+          match = false;
+          break;
+        }
+      }
+
+      if (match) {
+
+        phraseCounts[rule.label] =
+          (phraseCounts[rule.label] || 0) + 1;
+
+        groupCounts[rule.group] =
+          (groupCounts[rule.group] || 0) + 1;
+      }
+    }
+  }
+
+  // =========================
+  // 単語カウント
+  // =========================
+  for (const token of tokens) {
+
+    const word = token.surface_form;
+
+    if (!word || word.length <= 1) continue;
+    if (stopWords.includes(word)) continue;
+
+    wordCounts[word] =
+      (wordCounts[word] || 0) + 1;
+  }
+
+  // =========================
+  // 表示
+  // =========================
+  let result = "";
+
+  // フレーズ
+for (const key in phraseCounts) {
+
+  const groupName = labelToGroup[key];
+  const groupCount = groupCounts[groupName] || 0;
+
+  result += `${key}：${phraseCounts[key]}回（${groupName}：${groupCount}回）\n`;
+}
+
+result += "\n";
+
+
+  // 単語（多い順）
+  const sorted = Object.entries(wordCounts)
+    .sort((a, b) => b[1] - a[1]);
+
+  for (const [word, count] of sorted) {
+    if (count >= 2) {
+      result += `${word}：${count}回\n`;
+    }
+  }
+
+  document.getElementById("result").innerText =
+    result || "重複なし";
+
+}
+
+// =========================
+// kuromoji初期化
+// =========================
+window.onload = function () {
+
+  const btn = document.getElementById("btn");
+
+  kuromoji.builder({
+    dicPath: "https://unpkg.com/kuromoji@0.1.2/dict/"
+  }).build(function (err, tokenizer) {
+
+    if (err) {
+      console.error(err);
+      document.getElementById("result").innerText =
+        "辞書の読み込みに失敗しました";
+      return;
+    }
+
+    window.tokenizer = tokenizer;
+
+    btn.disabled = false;
+    btn.innerText = "解析する";
+  });
+};
+
+</script>
+
+</body>
+</html>
