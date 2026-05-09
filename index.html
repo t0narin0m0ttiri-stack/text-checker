@@ -90,7 +90,11 @@ function analyzeText() {
   const phraseRules = [
     { pattern: ["の", "よう", "な"], label: "のような", group: "比喩" },
     { pattern: ["の", "よう", "だ"], label: "のようだ", group: "比喩" },
-    { pattern: ["の", "よう", "に"], label: "のように", group: "比喩" }
+    { pattern: ["の", "よう", "に"], label: "のように", group: "比喩" },
+    { pattern: ["間違い", "ない"], label: "間違いない", group: "断定・強調" },
+　　{ pattern: ["間違い", "なく"], label: "間違いなく", group: "断定・強調" },
+　　{ pattern: ["絶対"], label: "絶対", group: "断定・強調" },
+　　{ pattern: ["絶対", "に"], label: "絶対に", group: "断定・強調" }
   ];
 
   const labelToGroup = {};
