@@ -190,7 +190,7 @@ window.onload = function () {
   const btn = document.getElementById("btn");
 
   kuromoji.builder({
-    dicPath: "https://unpkg.com/kuromoji@0.1.2/dict/"
+    dicPath: "./dict/"
   }).build(function (err, tokenizer) {
 
     if (err) {
