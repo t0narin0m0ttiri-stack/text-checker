@@ -209,5 +209,27 @@ window.onload = function () {
 
 </script>
 
+<footer>
+  <small>
+このツールは入力された文章をサーバーに送信・保存・学習することは一切行っておりません。
+すべての処理はブラウザ内で完結します。
+
+    使用ライブラリ：kuromoji.js（MIT License）
+  </small>
+
+  
+  <div style="margin-top:20px; background:white; padding:12px; border-radius:12px;">
+
+  <h3>改善リクエスト</h3>
+
+  <input id="newLabel" placeholder="例：同じ語尾" style="width:100%; padding:8px; margin-bottom:8px;">
+  
+  <input id="newGroup" placeholder="例：語尾の癖" style="width:100%; padding:8px; margin-bottom:8px;">
+
+  <button onclick="addRule()">追加</button>
+
+</div>
+</footer>
+
 </body>
 </html>
