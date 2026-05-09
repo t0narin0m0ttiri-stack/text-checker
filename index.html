@@ -141,10 +141,13 @@ for (const rule of phraseRules) {
   // =========================
   for (const token of tokens) {
 
-    const word = token.surface_form;
+const word = token.surface_form;
 
-    if (!word || word.length <= 1) continue;
-    if (stopWords.includes(word)) continue;
+if (!word) continue;
+if (word.trim() === "") continue; // 空白削除
+if (/\s/.test(word)) continue;    // スペース除外
+if (word.length <= 1) continue;
+if (stopWords.includes(word)) continue;
 
     wordCounts[word] =
       (wordCounts[word] || 0) + 1;
@@ -211,8 +214,8 @@ window.onload = function () {
 
 <footer>
   <small>
-このツールは入力された文章をサーバーに送信・保存・学習することは一切行っておりません。<br>
-すべての処理はブラウザ内で完結します。<br>
+このツールは入力された文章をサーバーに送信・保存・学習することは一切行っておりません。<br />
+すべての処理はブラウザ内で完結します。<br />
 <br>
     使用ライブラリ：kuromoji.js（MIT License）
   </small>
