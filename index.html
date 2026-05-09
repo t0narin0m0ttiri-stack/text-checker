@@ -171,6 +171,12 @@ function analyzeText() {
   { pattern: ["だ"], label: "だ", group: "語尾" },
   { pattern: ["です"], label: "です", group: "語尾" },
   { pattern: ["ます"], label: "ます", group: "語尾" },
+  { pattern: ["だった"], label: "だった", group: "語尾" },
+  { pattern: ["であった"], label: "であった", group: "語尾" },
+  { pattern: ["なのだ"], label: "なのだ", group: "語尾" },
+  { pattern: ["である"], label: "である", group: "語尾" },
+  { pattern: ["のだ"], label: "のだ", group: "語尾" },
+  { pattern: ["んだ"], label: "んだ", group: "語尾" },
 
   { pattern: ["だろう"], label: "だろう", group: "語尾（推量）" },
   { pattern: ["でしょう"], label: "でしょう", group: "語尾（推量）" },
@@ -201,6 +207,7 @@ for (const rule of phraseRules) {
   const wordCounts = {};
   const phraseCounts = {};
   const groupCounts = {};
+  const endingCounts = {};
 
   const stopWords = [
     "の","に","は","を","た","が","で","て","と","し","れ","さ"
@@ -244,8 +251,6 @@ for (let i = 0; i < tokens.length; i++) {
   if (!word) continue;
   if (word.trim() === "") continue;
   if (/\s/.test(word)) continue;
-  if (word.length <= 1) continue;
-  if (stopWords.includes(word)) continue;
 
   // =========================
   // ★ユーザー辞書チェック（重要）
@@ -257,6 +262,40 @@ for (let i = 0; i < tokens.length; i++) {
     // ★ここが超重要：辞書にヒットしたらその単語は終了
     continue;
   }
+
+  // =========================
+  // ★語尾カウント（追加）
+  // =========================
+  const endings = [
+    "だ","です","ます",
+    "だった","であった",
+    "なのだ","である","のだ","んだ",
+    "だろう","でしょう"
+  ];
+
+ for (const end of endings) {
+
+  const nextToken = tokens[i + 1]?.surface_form || "";
+
+  // 次が句読点・改行・文末なら語尾扱い
+  const isSentenceEnd =
+    nextToken === "。" ||
+    nextToken === "！" ||
+    nextToken === "？" ||
+    nextToken === "!" ||
+    nextToken === "?" ||
+    nextToken === "」" ||
+    nextToken === "" ||
+    nextToken === "\n";
+
+  if (word === end && isSentenceEnd) {
+    endingCounts[end] =
+      (endingCounts[end] || 0) + 1;
+  }
+}
+
+if (word.length <= 1) continue;
+if (stopWords.includes(word)) continue;
 
   // =========================
   // ★分解語対策（これが本丸）
@@ -293,6 +332,15 @@ for (const key in phraseCounts) {
   const groupCount = groupCounts[groupName] || 0;
 
   result += `${key}：${phraseCounts[key]}回（${groupName}：${groupCount}回）\n`;
+}
+
+result += "\n";
+
+// =========================
+// 語尾表示
+// =========================
+for (const [end, count] of Object.entries(endingCounts)) {
+  result += `語尾「${end}」：${count}回\n`;
 }
 
 result += "\n";
