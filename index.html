@@ -131,8 +131,52 @@ function analyzeText() {
   // =========================
 { pattern: ["まさに"], label: "まさに", group: "強調（感情・評価）" },
 { pattern: ["いかにも"], label: "いかにも", group: "強調（感情・評価）" },
-{ pattern: ["確か", "に"], label: "確かに", group: "強調（感情・評価）" } 
+{ pattern: ["確か", "に"], label: "確かに", group: "強調（感情・評価）" } ,
 
+  // =========================
+  // 否定強調（構文型）
+  // =========================
+  {
+    type: "neg-struct",
+    start: ["少しも"],
+    end: ["ない"],
+    label: "少しも〜ない",
+    group: "否定強調"
+  },
+  {
+    type: "neg-struct",
+    start: ["微塵も"],
+    end: ["ない"],
+    label: "微塵も〜ない",
+    group: "否定強調"
+  },
+  {
+    type: "neg-struct",
+    start: ["これっぽっちも"],
+    end: ["ない"],
+    label: "これっぽっちも〜ない",
+    group: "否定強調"
+  },
+  {
+    type: "neg-struct",
+    start: ["かけらも"],
+    end: ["ない"],
+    label: "かけらも〜ない",
+    group: "否定強調"
+  },
+
+  // =========================
+  // 語尾表現
+  // =========================
+  { pattern: ["だ"], label: "だ", group: "語尾" },
+  { pattern: ["です"], label: "です", group: "語尾" },
+  { pattern: ["ます"], label: "ます", group: "語尾" },
+
+  { pattern: ["だろう"], label: "だろう", group: "語尾（推量）" },
+  { pattern: ["でしょう"], label: "でしょう", group: "語尾（推量）" },
+
+  { pattern: ["じゃ", "ない", "か"], label: "じゃないか", group: "語尾（断定強め）" },
+  { pattern: ["では", "ない", "か"], label: "ではないか", group: "語尾（断定強め）" },
 
   ];
 
