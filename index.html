@@ -153,9 +153,9 @@ for (const rule of phraseRules) {
   // =========================
   // 単語カウント
   // =========================
-for (const token of tokens) {
+for (let i = 0; i < tokens.length; i++) {
 
-  const word = token.surface_form;
+  const word = tokens[i].surface_form;
 
   if (!word) continue;
   if (word.trim() === "") continue;
@@ -163,14 +163,36 @@ for (const token of tokens) {
   if (word.length <= 1) continue;
   if (stopWords.includes(word)) continue;
 
-  // ★ユーザー辞書チェック
+  // =========================
+  // ★ユーザー辞書チェック（重要）
+  // =========================
   if (userDictionary.includes(word)) {
     wordCounts[word] =
       (wordCounts[word] || 0) + 1;
+
+    // ★ここが超重要：辞書にヒットしたらその単語は終了
     continue;
   }
 
+  // =========================
+  // ★分解語対策（これが本丸）
+  // =========================
+  let isPartOfUserWord = false;
+
+  for (const dictWord of userDictionary) {
+    if (dictWord.includes(word)) {
+      isPartOfUserWord = true;
+      break;
+    }
+  }
+
+  if (isPartOfUserWord) {
+    continue; // カラ・スバを捨てる
+  }
+
+  // =========================
   // 通常カウント
+  // =========================
   wordCounts[word] =
     (wordCounts[word] || 0) + 1;
 }
