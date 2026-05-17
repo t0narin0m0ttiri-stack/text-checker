@@ -68,6 +68,8 @@ button:disabled {
     読み込み中...
   </button>
 
+  <div id="charCount"></div>
+
   <div id="result"></div>
 
 <script>
@@ -75,6 +77,21 @@ button:disabled {
 function analyzeText() {
 
   const text = document.getElementById("text").value;
+
+  // =========================
+  // 文字数
+  // =========================
+
+  // 総文字数（改行込み）
+  const totalCharCount = text.length;
+
+  // 改行・空白除外文字数
+  const pureCharCount =
+    text.replace(/\s/g, "").length;
+
+  document.getElementById("charCount").innerText =
+    `総文字数：${totalCharCount}文字\n` +
+    `改行・空白除外：${pureCharCount}文字`;
 
   if (!window.tokenizer) {
     document.getElementById("result").innerText =
@@ -270,7 +287,8 @@ for (let i = 0; i < tokens.length; i++) {
     "だ","です","ます",
     "だった","であった",
     "なのだ","である","のだ","んだ",
-    "だろう","でしょう"
+    "だろう","でしょう",
+    "ある","である","いる"
   ];
 
  for (const end of endings) {
